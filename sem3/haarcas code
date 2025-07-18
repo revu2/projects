@@ -1,1 +1,39 @@
-.
+# Install necessary libraries
+!pip install dlib
+
+import cv2
+import dlib
+import numpy as np
+from google.colab.patches import cv2_imshow
+from google.colab import files
+
+# Download the pre-trained landmarks model
+!wget http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
+!bzip2 -dk shape_predictor_68_face_landmarks.dat.bz2  # Unzips the file
+
+# Upload an image file
+uploaded = files.upload()
+img = cv2.imread(next(iter(uploaded)))
+
+# Load Haar Cascade for human face detection
+haar_face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+# Load dlib's face detector and shape predictor
+detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+
+# Convert the image to grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# Step 1: Detect human faces using Haar Cascade
+human_faces = haar_face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+
+# Step 2: Detect faces using dlib (works on both human and animated/cartoon images)
+dlib_faces = detector(gray)
+
+# Step 3: Combine both human and animated face detections
+all_faces = []
+
+# Add human faces from Haar cascade to the list
+for (x, y, w, h) in human_faces:
+    all_faces.append((x, y, w, h))
