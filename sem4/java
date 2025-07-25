@@ -1,0 +1,60 @@
+import model.Student;
+import service.StudentService;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        StudentService service = new StudentService();
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n📘 Student Management System");
+            System.out.println("1. Add Student");
+            System.out.println("2. View All Students");
+            System.out.println("3. Search Student by Roll No");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option: ");
+            choice = sc.nextInt();
+            sc.nextLine();  // consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Name: ");
+                    String name = sc.nextLine();
+                    System.out.print("Enter Age: ");
+                    int age = sc.nextInt();
+                    sc.nextLine();  // consume newline
+                    System.out.print("Enter Roll No: ");
+                    String roll = sc.nextLine();
+                    System.out.print("Enter Course: ");
+                    String course = sc.nextLine();
+
+                    Student s = new Student(name, age, roll, course);
+                    service.addStudent(s);
+                    break;
+
+                case 2:
+                    service.displayAllStudents();
+                    break;
+
+                case 3:
+                    System.out.print("Enter Roll No to search: ");
+                    String rollSearch = sc.nextLine();
+                    service.searchStudentByRollNo(rollSearch);
+                    break;
+
+                case 4:
+                    System.out.println("👋 Exiting... Thank you!");
+                    break;
+
+                default:
+                    System.out.println("Invalid option! Try again.");
+            }
+
+        } while (choice != 4);
+
+        sc.close();
+    }
+}
+
